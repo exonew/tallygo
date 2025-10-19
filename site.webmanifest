@@ -1,0 +1,25 @@
+{
+  "name": "TallyGo - Track Everything, Miss Nothing",
+  "short_name": "TallyGo",
+  "description": "Smart tracking made simple. Monitor projects, tasks, and goals with intuitive dashboards.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0E11",
+  "theme_color": "#A1FF4F",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
+}
