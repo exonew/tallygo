@@ -1,0 +1,203 @@
+[
+  {
+    "slug": "apex-homes",
+    "company_name": "Apex Luxury Build",
+    "owner_name": "Jonathan Sterling",
+    "tagline": "Crafting Timeless Legacies",
+    "established": "1985",
+    "phone": "+1 (555) 0199-2834",
+    "primary_color": "#D4AF37",
+    "theme": "Modern Luxury",
+    "bg_image": "assets/hero-1.jpg",
+    "stats": [
+      { "label": "Luxury Homes", "value": "500+" },
+      { "label": "Years Active", "value": "35" },
+      { "label": "Awards Won", "value": "24" }
+    ],
+    "projects": [
+      { "name": "The Obsidian Tower", "location": "Downtown Metropolis", "status": "Selling Fast", "typology": "Sky Villas", "cover_image": "assets/proj-1.jpg" },
+      { "name": "Serenity Enclave", "location": "Greenwich Hills", "status": "Ready to Move", "typology": "Eco-Estates", "cover_image": "assets/proj-2.jpg" },
+      { "name": "Azure Horizon", "location": "Malibu Coast", "status": "Sold Out", "typology": "Oceanfront", "cover_image": "assets/proj-3.jpg" }
+    ]
+  },
+  {
+    "slug": "green-earth",
+    "company_name": "Green Earth Developers",
+    "owner_name": "Sarah Reed",
+    "tagline": "Sustainable Living Redefined",
+    "established": "2010",
+    "phone": "+1 (555) 0122-8811",
+    "primary_color": "#2E8B57",
+    "theme": "Eco-Friendly",
+    "bg_image": "assets/hero-2.jpg",
+    "stats": [
+      { "label": "Acres Preserved", "value": "1200" },
+      { "label": "Trees Planted", "value": "50k" },
+      { "label": "Net-Zero Homes", "value": "150" }
+    ],
+    "projects": [
+      { "name": "River Wilds", "location": "North Creek", "status": "Pre-Launch", "typology": "Gated Plots", "cover_image": "assets/proj-4.jpg" },
+      { "name": "Forest Edge", "location": "Oregon Trail", "status": "In Progress", "typology": "Timber Cabins", "cover_image": "assets/proj-5.jpg" }
+    ]
+  },
+  {
+    "slug": "urban-core",
+    "company_name": "Urban Core Constructs",
+    "owner_name": "Marcus Chen",
+    "tagline": "The Pulse of the City",
+    "established": "2005",
+    "phone": "+1 (555) 0144-5566",
+    "primary_color": "#E63946",
+    "theme": "Industrial Chic",
+    "bg_image": "assets/hero-3.jpg",
+    "stats": [
+      { "label": "Lofts Built", "value": "800+" },
+      { "label": "Retail Specs", "value": "45" },
+      { "label": "City Blocks", "value": "12" }
+    ],
+    "projects": [
+      { "name": "The Foundry", "location": "SoHo District", "status": "Leasing", "typology": "Loft Apts", "cover_image": "assets/proj-6.jpg" },
+      { "name": "Station 42", "location": "Metro Hub", "status": "Construction", "typology": "Mixed Use", "cover_image": "assets/proj-7.jpg" }
+    ]
+  },
+  {
+    "slug": "heritage-stone",
+    "company_name": "Heritage Stone Works",
+    "owner_name": "Eleanor Vance",
+    "tagline": "Restoring History, Building Future",
+    "established": "1978",
+    "phone": "+1 (555) 0199-1122",
+    "primary_color": "#8D6E63",
+    "theme": "Classic",
+    "bg_image": "assets/hero-4.jpg",
+    "stats": [
+      { "label": "Manors Restored", "value": "45" },
+      { "label": "Years Heritage", "value": "45" },
+      { "label": "Artisans", "value": "30" }
+    ],
+    "projects": [
+      { "name": "Vance Manor", "location": "Highlands", "status": "Private", "typology": "Restoration", "cover_image": "assets/proj-1.jpg" },
+      { "name": "Stonebridge Estate", "location": "Cambridge", "status": "Completed", "typology": "Custom Build", "cover_image": "assets/proj-2.jpg" }
+    ]
+  },
+  {
+    "slug": "nova-developments",
+    "company_name": "Nova Developments",
+    "owner_name": "Alex Nova",
+    "tagline": "Future-Ready Smart Homes",
+    "established": "2018",
+    "phone": "+1 (555) 0177-3344",
+    "primary_color": "#00E0FF",
+    "theme": "Futuristic",
+    "bg_image": "assets/hero-1.jpg",
+    "stats": [
+      { "label": "Smart Homes", "value": "200" },
+      { "label": "Awards", "value": "15" },
+      { "label": "IoT Integrations", "value": "10k+" }
+    ],
+    "projects": [
+      { "name": "Cyber Heights", "location": "Tech Park", "status": "Selling", "typology": "Smart Condos", "cover_image": "assets/proj-3.jpg" },
+      { "name": "Neon Villas", "location": "Silicon Valley", "status": "Pre-Order", "typology": "Automated", "cover_image": "assets/proj-4.jpg" }
+    ]
+  },
+  {
+    "slug": "coastal-breeze",
+    "company_name": "Coastal Breeze Homes",
+    "owner_name": "Marina Del Rey",
+    "tagline": "Life by the Water",
+    "established": "1995",
+    "phone": "+1 (555) 0188-7799",
+    "primary_color": "#4FB3FF",
+    "theme": "Coastal",
+    "bg_image": "assets/hero-2.jpg",
+    "stats": [
+      { "label": "Beachfronts", "value": "150" },
+      { "label": "Marinas", "value": "4" },
+      { "label": "Happy Families", "value": "300+" }
+    ],
+    "projects": [
+      { "name": "The Tides", "location": "Miami Beach", "status": "Ready", "typology": "Resort Style", "cover_image": "assets/proj-5.jpg" },
+      { "name": "Coral Reef", "location": "Key West", "status": "Sold Out", "typology": "Bungalows", "cover_image": "assets/proj-6.jpg" }
+    ]
+  },
+  {
+    "slug": "ironclad-constructions",
+    "company_name": "Ironclad Constructions",
+    "owner_name": "Jack Steele",
+    "tagline": "Built to Last",
+    "established": "1990",
+    "phone": "+1 (555) 0166-2233",
+    "primary_color": "#607D8B",
+    "theme": "Industrial",
+    "bg_image": "assets/hero-3.jpg",
+    "stats": [
+      { "label": "Commercial SqFt", "value": "1M+" },
+      { "label": "Skyscrapers", "value": "5" },
+      { "label": "Safety Rating", "value": "A+" }
+    ],
+    "projects": [
+      { "name": "Steel Tower", "location": "Chicago", "status": "Leasing", "typology": "Office", "cover_image": "assets/proj-7.jpg" },
+      { "name": "Iron Works Mall", "location": "Detroit", "status": "Open", "typology": "Retail", "cover_image": "assets/proj-1.jpg" }
+    ]
+  },
+  {
+    "slug": "zenith-living",
+    "company_name": "Zenith Living",
+    "owner_name": "Maya Patel",
+    "tagline": "Peak of Perfection",
+    "established": "2012",
+    "phone": "+1 (555) 0155-4422",
+    "primary_color": "#9C27B0",
+    "theme": "Eclectic",
+    "bg_image": "assets/hero-4.jpg",
+    "stats": [
+      { "label": "Boutique Apts", "value": "120" },
+      { "label": "Design Awards", "value": "8" },
+      { "label": "Cities", "value": "3" }
+    ],
+    "projects": [
+      { "name": "Zenith Heights", "location": "Mumbai", "status": "Pre-Launch", "typology": "Luxury Apt", "cover_image": "assets/proj-2.jpg" },
+      { "name": "The Lotus", "location": "Bangalore", "status": "Construction", "typology": "Gated", "cover_image": "assets/proj-3.jpg" }
+    ]
+  },
+  {
+    "slug": "alpine-retreats",
+    "company_name": "Alpine Retreats",
+    "owner_name": "Lars Johansson",
+    "tagline": "Mountain serenity",
+    "established": "2000",
+    "phone": "+1 (555) 0144-9988",
+    "primary_color": "#5D4037",
+    "theme": "Rustic",
+    "bg_image": "assets/hero-1.jpg",
+    "stats": [
+      { "label": "Chalets Built", "value": "85" },
+      { "label": "Elevations", "value": "High" },
+      { "label": "Snow Days", "value": "Always" }
+    ],
+    "projects": [
+      { "name": "Snowy Peak", "location": "Aspen", "status": "Rental", "typology": "Chalet", "cover_image": "assets/proj-4.jpg" },
+      { "name": "Glacier View", "location": "Swiss Alps", "status": "Selling", "typology": "Resort", "cover_image": "assets/proj-5.jpg" }
+    ]
+  },
+  {
+    "slug": "solstice-solar",
+    "company_name": "Solstice Homes",
+    "owner_name": "Ray Beam",
+    "tagline": "Powered by the Sun",
+    "established": "2020",
+    "phone": "+1 (555) 0133-1100",
+    "primary_color": "#FFC107",
+    "theme": "Modern Eco",
+    "bg_image": "assets/hero-2.jpg",
+    "stats": [
+      { "label": "Energy Saved", "value": "1GWh" },
+      { "label": "Homes", "value": "60" },
+      { "label": "Carbon Offset", "value": "High" }
+    ],
+    "projects": [
+      { "name": "Sun Valley", "location": "Arizona", "status": "Selling", "typology": "Solar Community", "cover_image": "assets/proj-6.jpg" },
+      { "name": "Desert Bloom", "location": "Nevada", "status": "Planned", "typology": "Off-grid", "cover_image": "assets/proj-7.jpg" }
+    ]
+  }
+]

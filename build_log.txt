@@ -1,0 +1,48 @@
+
+> build
+> astro build
+
+
+Auto-generating collections for folders in "src/content/" that are not defined as collections.
+This is deprecated, so you should define these collections yourself in "src/content.config.ts".
+The following collections have been auto-generated: [32mdemos[39m
+
+[2m22:16:01[22m [34m[content][39m Syncing content
+[2m22:16:01[22m [34m[content][39m Synced content
+[2m22:16:01[22m [34m[types][39m Generated [2m64ms[22m
+[2m22:16:01[22m [34m[build][39m output: [34m"static"[39m
+[2m22:16:01[22m [34m[build][39m mode: [34m"static"[39m
+[2m22:16:01[22m [34m[build][39m directory: [34mC:\Users\pc\Desktop\builder-CMS\dist\[39m
+[2m22:16:01[22m [34m[build][39m Collecting build info...
+[2m22:16:01[22m [34m[build][39m [32m✓ Completed in 85ms.[39m
+[2m22:16:01[22m [34m[build][39m Building static entrypoints...
+[33m[1m22:16:03[22m [WARN] [vite][39m [33m[esbuild css minify]
+▲ [WARNING] Unexpected "{" [css-syntax-error]
+
+    <stdin>:158:8:
+      158 │         {brandStyle}
+          ╵         ^
+
+
+▲ [WARNING] Expected ":" [css-syntax-error]
+
+    <stdin>:158:19:
+      158 │         {brandStyle}
+          │                    ^
+          ╵                    :
+
+[39m
+[2m22:16:03[22m [34m[vite][39m [32m✓ built in 1.45s[39m
+[2m22:16:03[22m [34m[build][39m [32m✓ Completed in 1.51s.[39m
+
+[42m[30m generating static routes [39m[49m
+[2m22:16:03[22m [32m▶[39m src/pages/demos/[slug]/index.astro
+[2m22:16:03[22m   [34m├─[39m [2m/demos/apex-homes/index.html[22mAstro.glob is deprecated and will be removed in a future major version of Astro.
+Use import.meta.glob instead: https://vitejs.dev/guide/features.html#glob-import
+Cannot read properties of undefined (reading 'split')
+  [1mStack trace:[22m
+[2m    at file:///C:/Users/pc/Desktop/builder-CMS/dist/pages/demos/_slug_.astro.mjs?time=1769618763152:24:30
+    at async renderToString (file:///C:/Users/pc/Desktop/builder-CMS/node_modules/astro/dist/runtime/server/render/astro/render.js:14:26)
+    at async lastNext (file:///C:/Users/pc/Desktop/builder-CMS/node_modules/astro/dist/core/render-context.js:215:25)
+    at async callMiddleware (file:///C:/Users/pc/Desktop/builder-CMS/node_modules/astro/dist/core/middleware/callMiddleware.js:11:10)
+    at async generatePath (file:///C:/Users/pc/Desktop/builder-CMS/node_modules/astro/dist/core/build/generate.js:381:16)[22m

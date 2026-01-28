@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TallyGo — Simple Invoicing & Stock via Messaging (No App)</title>
+  <meta name="description" content="Lightweight invoicing, stock alerts, and payment reminders via Messaging-on-Hand. Works on any phone. Try free for 7 days.">
+  <meta name="keywords" content="invoicing software, stock management, payment tracking, retail management, auto repair billing, property management, messaging bot">
+  <meta name="author" content="TallyGo">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="oklch(0.75 0.15 120)">
+  
+  <!-- Modern Performance Optimizations (1000×) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="preload" href="main.js" as="script">
+  <link rel="preload" href="region-detection.js" as="script">
+  
+  <!-- Speculation Rules (Chrome+) for faster navigation -->
+  <script type="speculationrules">
+  {
+    "prerender": [
+      {
+        "source": "document",
+        "where": {
+          "and": [
+            {"href_matches": "/*"}
+          ]
+        },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+  </script>
+  
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; media-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+  
+  <!-- Modern Font Loading (CLS Prevention) -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="preload" href="main.js" as="script">
+  <link rel="preload" href="/favicon.ico" as="image">
+  
+  <!-- Critical CSS inline -->
+  <style>
+    :root {
+      --bg: #0A0E11;
+      --surface: #0F1419;
+      --primary: #A1FF4F;
+      --accent: #00E0FF;
+      --text: #E6EEF6;
+      --muted: #A8B0B8;
+      --border: #1A222A;
+      --font-display: "Space Grotesk", ui-sans-serif, system-ui;
+      --font-body: Inter, ui-sans-serif, system-ui;
+      --fs-900: clamp(40px, 6vw, 64px);
+      --fs-700: clamp(22px, 3.4vw, 32px);
+      --fs-600: 20px;
+      --fs-500: 18px;
+      --fs-400: 16px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      --space-8: 64px;
+      --space-9: 96px;
+      --radius: 14px;
+      --radius-pill: 999px;
+      --elev-1: 0 6px 24px rgba(0,0,0,.35);
+      --elev-2: 0 14px 40px rgba(0,0,0,.35);
+      --easing: cubic-bezier(.2,.8,.2,1);
+      --dur-s: 180ms;
+      --dur-m: 260ms;
+      --dur-l: 380ms;
+    }
+    
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #FFFFFF;
+        --surface: #F8FAFC;
+        --primary: #059669;
+        --accent: #0891B2;
+        --text: #1E293B;
+        --muted: #64748B;
+        --border: #E2E8F0;
+      }
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding: var(--space-8);
+    }
+    
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: var(--fs-900);
+      font-weight: 700;
+      margin-bottom: var(--space-5);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all var(--dur-m) var(--easing);
+      border: 2px solid transparent;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      min-height: 44px;
+    }
+    
+    .btn--primary {
+      background: var(--primary);
+      color: var(--bg);
+    }
+    
+    .btn--ghost {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: transparent;
+    }
+    
+    .btn--lg {
+      padding: var(--space-5) var(--space-8);
+      font-size: var(--fs-500);
+    }
+    
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: var(--space-4);
+      background: rgba(10, 14, 17, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .skip {
+      position: absolute;
+      top: -40px;
+      left: 6px;
+      background: var(--primary);
+      color: var(--bg);
+      padding: var(--space-2);
+      text-decoration: none;
+      border-radius: var(--radius);
+      z-index: 1001;
+      font-weight: 600;
+    }
+    
+    .skip:focus {
+      top: 6px;
+    }
+    
+    .progressbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--primary);
+      z-index: 1001;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform var(--dur-s) var(--easing);
+    }
+    
+    .sticky-cta {
+      position: fixed;
+      bottom: var(--space-4);
+      left: var(--space-4);
+      right: var(--space-4);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: var(--space-3);
+      display: flex;
+      gap: var(--space-2);
+      box-shadow: var(--elev-2);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(100px);
+      transition: all var(--dur-m) var(--easing);
+    }
+    
+    .sticky-cta.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    @media (min-width: 768px) {
+      .sticky-cta {
+        display: none;
+      }
+    }
+  </style>
+  
+  <link rel="stylesheet" href="styles.css">
+  <link rel="canonical" href="https://tallygo.app/">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="TallyGo — Track Everything, Miss Nothing">
+  <meta property="og:description" content="Smart tracking made simple. Monitor projects, tasks, and goals with TallyGo's intuitive dashboard.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/og.png">
+  <meta property="og:url" content="https://tallygo.app/">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TallyGo — Track Everything, Miss Nothing">
+  <meta name="twitter:description" content="Smart tracking made simple. Monitor projects, tasks, and goals with TallyGo's intuitive dashboard.">
+  <meta name="twitter:image" content="/og.png">
+  
+  <!-- JSON-LD -->
+  <script type="application/ld+json" id="ld-org"></script>
+  <script type="application/ld+json" id="ld-product"></script>
+  <script type="application/ld+json" id="ld-faq"></script>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  
+  <div class="progressbar" aria-hidden="true"></div>
+  
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="logo" href="#hero">TallyGo</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Toggle navigation">Menu</button>
+      <ul id="nav-menu" class="nav__menu">
+        <li><a class="nav__link" href="#features">Features</a></li>
+        <li><a class="nav__link" href="#why">Why TallyGo</a></li>
+        <li><a class="nav__link" href="#pricing">Pricing</a></li>
+        <li><a class="nav__link" href="#faq">FAQ</a></li>
+        <li><a class="nav__link" href="#contact">Contact</a></li>
+        <li><a class="btn btn--primary" href="#pricing">Start Free Trial</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Modern Scroll Progress Bar -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-bar__fill"></div>
+  </div>
+
+  <main id="main">
+    <section id="hero" class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="gradient-grid"></div>
+        <div class="ambient-glow" data-depth="1"></div>
+      </div>
+      
+      <h1 class="hero__title">
+        <span class="word" data-word="Run">Run</span>
+        <span class="word" data-word="Your">Your</span>
+        <span class="word" data-word="Small">Small</span>
+        <span class="word" data-word="Business">Business</span>
+        <span class="word" data-word="from">from</span>
+        <span class="word" data-word="Your">Your</span>
+        <span class="word" data-word="Phone">Phone</span>
+      </h1>
+      
+      <p class="hero__sub"><strong>TallyGo</strong> is a lightweight <strong>Messaging-on-Hand</strong> bot for Invoicing, Stock & Due Balances. No new app required. Perfect for Retail, Auto Repair, Property Managers, Cafés, Event Vendors, Multi-Tenant Facilities.</p>
+      
+      <div class="hero__cta" style="opacity: 0; transform: translateY(12px);">
+        <a class="btn btn--primary btn--lg magnetic" href="#pricing" data-ripple>
+          <span>Start 7-Day Free Trial</span>
+          <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M7.5 12.5L12.5 7.5L7.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="trust" style="opacity: 0; transform: translateY(12px);">
+        <div class="trust__chips">
+          <span class="chip">✓ Simple Invoicing</span>
+          <span class="chip">✓ Card/Link Payments</span>
+          <span class="chip">✓ Works on any phone</span>
+        </div>
+        <div class="logos">
+          <p class="logos__text">Trusted by teams at</p>
+          <div class="logos__strip">
+            <span class="logo-placeholder">Acme Corp</span>
+            <span class="logo-placeholder">TechFlow</span>
+            <span class="logo-placeholder">DataSync</span>
+            <span class="logo-placeholder">CloudBase</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="scroll-cue" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      </section>
+
+      <section id="problem" class="section">
+        <div class="container">
+          <h2 class="section__title">Is Your Business Management a Mess?</h2>
+          
+          <div class="problem__grid">
+            <div class="problem__item">
+              <div class="problem__icon">📝</div>
+              <h3>Paper Receipts</h3>
+              <p>Scattered invoices and manual tracking?</p>
+            </div>
+            
+            <div class="problem__item">
+              <div class="problem__icon">📦</div>
+              <h3>Stock-Outs</h3>
+              <p>Fast-moving items finish at the worst time?</p>
+            </div>
+            
+            <div class="problem__item">
+              <div class="problem__icon">⏰</div>
+              <h3>Missed Follow-ups</h3>
+              <p>Late payments and forgotten reminders?</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="highlights" class="section highlights">
+      <div class="container">
+        <h2 class="section-title reveal">TallyGo organizes your business in your phone's messages</h2>
+        <p class="section-sub reveal">Create invoices, track stock, send reminders, and view nightly sales summaries. A clean web dashboard handles items, customers, and reports.</p>
+        
+        <div class="highlights__grid">
+          <div class="card card--feature tilt reveal">
+            <div class="card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 2L20.09 8.26L28 9L22 14L23.18 22L16 18.77L8.82 22L10 14L4 9L11.91 8.26L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>1) Organize</h3>
+            <p>Invoices, customers, stock & due balances in one place.</p>
+          </div>
+          
+          <div class="card card--feature tilt reveal">
+            <div class="card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 8V16L22 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>2) Get Paid Faster</h3>
+            <p>10-second invoice with <strong>card/payment link</strong>, automated reminders.</p>
+          </div>
+          
+          <div class="card card--feature tilt reveal">
+            <div class="card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 2C8.27 2 2 8.27 2 16S8.27 30 16 30 30 23.73 30 16 23.73 2 16 2Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M16 8V16L22 22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>3) Stay Stocked</h3>
+            <p>Auto stock updates + <strong>Low-Stock Alerts</strong>.</p>
+          </div>
+          
+          <div class="card card--feature tilt reveal">
+            <div class="card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect x="2" y="6" width="28" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 10L16 18L30 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>4) Grow</h3>
+            <p>Nightly <strong>Sales Digest</strong>; top items & customers on dashboard.</p>
+          </div>
+          
+          <div class="card card--feature tilt reveal">
+            <div class="card__icon">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path d="M16 2L20.09 8.26L28 9L22 14L23.18 22L16 18.77L8.82 22L10 14L4 9L11.91 8.26L16 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>5) Professional</h3>
+            <p>Branded digital invoices & receipts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="social-proof" class="section social-proof">
+      <div class="container">
+        <div class="testimonial reveal">
+          <blockquote>
+            "TallyGo transformed how we track our projects. What used to take hours now takes minutes."
+          </blockquote>
+          <cite>
+            <strong>Sarah Chen</strong>
+            <span>Project Manager, TechFlow</span>
+          </cite>
+        </div>
+      </div>
+      </section>
+
+      <section id="business-types" class="section">
+        <div class="container">
+          <h2 class="section__title">Made for Your Business Type</h2>
+          
+          <div class="business-types__grid">
+            <div class="card card--business tilt reveal">
+              <h3>Retail / Convenience</h3>
+              <ul>
+                <li>Quick checkout</li>
+                <li>Link payments</li>
+                <li>Low-stock alerts</li>
+                <li>Customer tracking</li>
+              </ul>
+            </div>
+            
+            <div class="card card--business tilt reveal">
+              <h3>Auto Repair</h3>
+              <ul>
+                <li><strong>Work Orders</strong> (parts + labor)</li>
+                <li>Final invoice by message/email</li>
+                <li>Parts inventory tracking</li>
+              </ul>
+            </div>
+            
+            <div class="card card--business tilt reveal">
+              <h3>Property Managers</h3>
+              <ul>
+                <li>Monthly invoices</li>
+                <li>Bulk reminders</li>
+                <li>Arrears report</li>
+                <li>Tenant management</li>
+              </ul>
+            </div>
+            
+            <div class="card card--business tilt reveal">
+              <h3>Cafés / QSR</h3>
+              <ul>
+                <li>Simple menu billing</li>
+                <li>Basic <strong>KOT</strong> routing</li>
+                <li>POS-light flows</li>
+                <li>Daily closing reports</li>
+              </ul>
+            </div>
+            
+            <div class="card card--business tilt reveal">
+              <h3>Events & Vendors</h3>
+              <ul>
+                <li>Quotes → invoice</li>
+                <li>Deposit tracking</li>
+                <li>Vendor payouts</li>
+                <li>Event management</li>
+              </ul>
+            </div>
+            
+            <div class="card card--business tilt reveal">
+              <h3>Multi-Tenant Facilities</h3>
+              <ul>
+                <li>Contracts management</li>
+                <li>Recurring invoices</li>
+                <li>Collections dashboard</li>
+                <li>Tenant communications</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    
+
+    <section id="pricing" class="section pricing">
+      <div class="container">
+        <h2 class="section-title reveal">Pricing — Global (USD)</h2>
+        <p class="section-sub reveal">All plans include: Messaging-on-Hand (SMS/shareable links), Web Dashboard, Invoicing, Stock, Due Balances, Nightly Sales Digest. Cancel anytime.</p>
+        
+        <div class="pricing-toggle reveal">
+          <button class="switch" data-pricing-toggle>
+            <span class="switch__label">Monthly</span>
+            <span class="switch__track">
+              <span class="switch__thumb"></span>
+            </span>
+            <span class="switch__label">Annual</span>
+            <span class="switch__savings">Save 15%</span>
+          </button>
+        </div>
+        
+        <div class="pricing__grid">
+          <div class="card card--price reveal">
+            <h3>STARTER — for Solo Businesses</h3>
+            <div class="price">
+              <span class="price__currency">$</span>
+              <span class="price__amount" data-monthly="9" data-annual="9">9</span>
+              <span class="price__period">/month</span>
+            </div>
+            <ul class="price-features">
+              <li>Up to <strong>300 invoices</strong> / month</li>
+              <li><strong>2 staff</strong> users</li>
+              <li>Email support</li>
+              <li><strong>Messaging Connectors (optional add-ons):</strong></li>
+              <li>• Telegram Connector <strong>+ $10 / month</strong></li>
+              <li>• WhatsApp Connector <strong>+ $15 / month</strong></li>
+            </ul>
+            <a class="btn btn--ghost" href="#checkout">Get Started</a>
+          </div>
+          
+          <div class="card card--price card--featured reveal">
+            <div class="badge">Most Popular</div>
+            <h3>PRO — for Growing Businesses</h3>
+            <div class="price">
+              <span class="price__currency">$</span>
+              <span class="price__amount" data-monthly="29" data-annual="29">29</span>
+              <span class="price__period">/month</span>
+            </div>
+            <ul class="price-features">
+              <li>Up to <strong>1,500 invoices</strong> / month</li>
+              <li><strong>5 staff</strong> users</li>
+              <li>Priority support</li>
+              <li><strong>Includes ONE connector</strong> (Telegram <strong>or</strong> WhatsApp)</li>
+              <li>Add extra connector: <strong>+ $12 / month</strong></li>
+            </ul>
+            <a class="btn btn--primary" href="#checkout">Start Free Trial</a>
+          </div>
+          
+          <div class="card card--price reveal">
+            <h3>BUSINESS — for Multi-Location</h3>
+            <div class="price">
+              <span class="price__currency">$</span>
+              <span class="price__amount" data-monthly="79" data-annual="79">79</span>
+              <span class="price__period">/month</span>
+            </div>
+            <ul class="price-features">
+              <li><strong>Unlimited invoices</strong></li>
+              <li><strong>10 staff</strong> users</li>
+              <li>Dedicated success manager</li>
+              <li><strong>Includes BOTH connectors</strong> (Telegram <strong>and</strong> WhatsApp)</li>
+              <li>Multi-location dashboard</li>
+            </ul>
+            <a class="btn btn--ghost" href="#contact">Contact Sales</a>
+          </div>
+        </div>
+        
+        <div class="add-ons reveal">
+          <h3>Popular Add-Ons (Grow When You're Ready)</h3>
+          <div class="add-ons__grid">
+            <div class="add-on">
+              <h4>Accounting Connector (Xero/QuickBooks/Zoho)</h4>
+              <p><strong>+ $20 / month</strong><br>Daily sync to your books.</p>
+            </div>
+            <div class="add-on">
+              <h4>Bulk Messaging Pack</h4>
+              <p><strong>+ $15 / 5,000 messages</strong><br>For reminders/alerts via Messaging-on-Hand; WA/SMS billed at actuals if used.</p>
+            </div>
+            <div class="add-on">
+              <h4>Thermal Print Pack</h4>
+              <p><strong>+ $10 / month</strong><br>Printer templates & KOT forwarding.</p>
+            </div>
+          </div>
+          <p class="add-ons__note"><strong>One-Time Setup (optional):</strong> $50 — We import your items/customers and configure templates.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq">
+      <div class="container">
+        <h2 class="section-title reveal">FAQs (Short & Sweet)</h2>
+        <p class="section-sub reveal">Everything you need to know about TallyGo.</p>
+        
+        <div class="faq-list">
+          <div class="card card--faq accordion reveal">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Do I need to install an app?</span>
+              <svg class="accordion__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__content">
+              <p>No—TallyGo works via <strong>Messaging-on-Hand</strong> and a simple web dashboard.</p>
+            </div>
+          </div>
+          
+          <div class="card card--faq accordion reveal">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Does it handle tax/VAT?</span>
+              <svg class="accordion__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__content">
+              <p>Yes—enable tax fields as needed.</p>
+            </div>
+          </div>
+          
+          <div class="card card--faq accordion reveal">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Import data?</span>
+              <svg class="accordion__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__content">
+              <p>You can import items/customers via CSV.</p>
+            </div>
+          </div>
+          
+          <div class="card card--faq accordion reveal">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Is my data safe?</span>
+              <svg class="accordion__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__content">
+              <p>Yes—encrypted at rest and in transit with regular backups.</p>
+            </div>
+          </div>
+          
+          <div class="card card--faq accordion reveal">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>Data safety?</span>
+              <svg class="accordion__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__content">
+              <p>Your data is private to your account. You can export anytime.</p>
+            </div>
+          </div>
+          
+          <div class="card card--faq accordion reveal">
+            <button class="accordion__trigger" aria-expanded="false">
+              <span>What support do you provide?</span>
+              <svg class="accordion__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="accordion__content">
+              <p>We provide 24/7 support via email, chat, and phone. Enterprise customers get dedicated support with faster response times.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checkout" class="section final-cta">
+      <div class="container">
+        <h2 class="cta-title reveal">Ready to get started?</h2>
+        <p class="cta-sub reveal">Join thousands of businesses who trust TallyGo to keep their operations organized.</p>
+        
+        <div class="cta-buttons reveal">
+          <a class="btn btn--primary btn--lg magnetic" href="mailto:tallygo@duck.com?subject=Start%20Free%20Trial&body=I%20want%20to%20start%20a%20free%20trial%20of%20TallyGo." data-ripple>
+            <span>Start My 7-Day Free Trial Now</span>
+            <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7.5 12.5L12.5 7.5L7.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        
+        <div class="cta-proof reveal">
+          <p>✓ 7-day free trial • ✓ No card needed • ✓ Cancel anytime</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <a class="logo" href="#hero">TallyGo</a>
+          <p>Run your small business from your phone.</p>
+        </div>
+        
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <ul>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#faq">FAQ</a></li>
+              <li><a href="#demo">Demo</a></li>
+            </ul>
+          </div>
+          
+          <!-- <div class="footer-column">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="mailto:support@tallygo.app">Help Center</a></li>
+              <li><a href="mailto:support@tallygo.app">Contact Us</a></li>
+              <li><a href="#status">Status</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="#careers">Careers</a></li>
+              <li><a href="#blog">Blog</a></li>
+              <li><a href="#press">Press</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#privacy">Privacy</a></li>
+              <li><a href="#terms">Terms</a></li>
+              <li><a href="#security">Security</a></li>
+              <li><a href="#cookies">Cookies</a></li>
+            </ul>
+          </div> -->
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> TallyGo. All rights reserved.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M18.244 2.25H15.39L12.25 6.5L8.75 2.25H2L7.5 10.5L2 17.75H4.86L8 13.5L11.5 17.75H18.25L12.75 9.5L18.244 2.25Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0C12.4183 0 16 3.58172 16 8Z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M5.5 7V13M5.5 7V5.5C5.5 4.67157 6.17157 4 7 4H9C9.82843 4 10.5 4.67157 10.5 5.5V7M5.5 7H3M10.5 7V13M10.5 7H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="GitHub">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7.5 15.5C3.5 16.5 3.5 13.5 2 13M13.5 15.5V13C13.5 12.4 13.4 11.8 13.2 11.2C13.6 10.4 14.2 9.4 15 8.6C15.8 7.8 16.6 6.8 16.8 5.6C17 4.4 16.6 3.2 15.8 2.4C15 1.6 13.8 1.2 12.6 1.4C11.4 1.6 10.4 2.4 9.6 3.2C8.8 4 8.2 5 7.8 6C7.4 5.2 6.8 4.4 6 3.6C5.2 2.8 4.2 2.2 3 2C1.8 1.8 0.6 2.2 -0.2 3C-1 3.8 -1.4 5 -1.2 6.2C-1 7.4 -0.4 8.4 0.4 9.2C1.2 10 2.2 10.6 3 11C2.6 11.6 2.4 12.2 2.4 12.8V15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="sticky-cta" role="region" aria-label="Quick actions">
+    <a class="btn btn--primary" href="#pricing">Start Trial</a>
+  </div>
+
+
+  <script src="main.js" defer></script>
+  <script src="region-detection.js" defer></script>
+</body>
+</html>

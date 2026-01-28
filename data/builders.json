@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "apex-homes",
+    "company_name": "Apex Luxury Build",
+    "owner_name": "Jonathan Sterling",
+    "phone": "+1 (555) 0199-2834",
+    "whatsapp_link": "https://wa.me/155501992834",
+    "primary_color": "#1a1a1a",
+    "accent_color": "#D4AF37",
+    "theme": "luxury",
+    "hero_bg": "assets/hero-1.jpg",
+    "projects": [
+      {
+        "name": "The Obsidian Tower",
+        "location": "Downtown Metropolis",
+        "status": "Selling Fast",
+        "typology": "4BHK Sky Villas",
+        "cover_image": "assets/proj-1.jpg",
+        "highlights": ["360° Views", "Private Pool", "Concierge"]
+      },
+      {
+        "name": "Serenity Enclave",
+        "location": "Greenwich Hills",
+        "status": "Ready to Move",
+        "typology": "3BHK Eco-Homes",
+        "cover_image": "assets/proj-2.jpg",
+        "highlights": ["Solar Powered", "Forest View"]
+      }
+    ],
+    "tenancy": {
+      "headline": "Prime Retail & Office Spaces",
+      "locations": ["Obsidian Plaza - Ground Floor", "Serenity Commercial Hub"],
+      "unit_types": ["Retail Showroom (2000 sqft)", "Office Suite (1500 sqft)"],
+      "amenities": ["24/7 Security", "Central HVAC", "Valet Parking"],
+      "brochure_pdf": "assets/brochure.pdf",
+      "contact_hours": "Mon-Fri: 9am - 6pm"
+    }
+  },
+  {
+    "slug": "green-earth",
+    "company_name": "Green Earth Developers",
+    "owner_name": "Sarah Reed",
+    "phone": "+1 (555) 0122-8811",
+    "whatsapp_link": "https://wa.me/155501228811",
+    "primary_color": "#2E8B57",
+    "accent_color": "#8FBC8F",
+    "theme": "earthy",
+    "hero_bg": "assets/hero-2.jpg",
+    "projects": [
+      {
+        "name": "River Wilds",
+        "location": "North Creek",
+        "status": "Pre-Launch",
+        "typology": "Gated Community Plots",
+        "cover_image": "assets/proj-3.jpg",
+        "highlights": ["River Access", "Organic Farm", "Jogging Track"]
+      }
+    ],
+    "tenancy": {
+      "headline": "Commercial Opportunities",
+      "locations": ["River Wilds Clubhouse"],
+      "unit_types": ["Cafe Space", "Convenience Store"],
+      "amenities": ["High Footfall", "Resident Captive Audience"],
+      "brochure_pdf": "assets/brochure.pdf",
+      "contact_hours": "Daily: 10am - 7pm"
+    }
+  }
+]

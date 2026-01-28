@@ -1,0 +1,270 @@
+import json
+import os
+import shutil
+import http.server
+import socketserver
+import time
+import sys
+import threading
+from pathlib import Path
+
+# --- Configuration ---
+DATA_DIR = Path('data')
+DATA_FILE = DATA_DIR / 'builders.json'
+SRC_DIR = Path('src')
+DIST_DIR = Path('dist')
+PORT = 8000
+
+# --- Generator Logic ---
+
+def load_data():
+    if not DATA_FILE.exists():
+        print(f"Error: {DATA_FILE} not found.")
+        return []
+    try:
+        with open(DATA_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error reading JSON: {e}")
+        return []
+
+def clean_dist():
+    if DIST_DIR.exists():
+        shutil.rmtree(DIST_DIR)
+    DIST_DIR.mkdir(parents=True, exist_ok=True)
+
+def copy_assets():
+    # 1. Copy Assets from DATA (User Content)
+    data_assets = DATA_DIR / 'assets'
+    dist_assets = DIST_DIR / 'assets'
+    
+    if data_assets.exists():
+        shutil.copytree(data_assets, dist_assets, dirs_exist_ok=True)
+    else:
+        print(f"Warning: No assets folder found at {data_assets}")
+        dist_assets.mkdir(parents=True, exist_ok=True)
+
+    # 2. Copy JS from SRC (Engine Code)
+    dist_app_js = DIST_DIR / 'app.js'
+    src_app_js = SRC_DIR / 'js/app.js'
+    if src_app_js.exists():
+        shutil.copy2(src_app_js, dist_app_js)
+
+    # 3. Combine CSS
+    base_css_path = SRC_DIR / 'css/base.css'
+    themes_css_path = SRC_DIR / 'css/themes.css'
+    
+    css_content = ""
+    if base_css_path.exists():
+        css_content += base_css_path.read_text(encoding='utf-8')
+    if themes_css_path.exists():
+        css_content += "\n" + themes_css_path.read_text(encoding='utf-8')
+        
+    (DIST_DIR / 'style.css').write_text(css_content, encoding='utf-8')
+
+def generate_project_card(project):
+    # Simple HTML fragment for a project
+    highlights = "".join([f"<li>{h}</li>" for h in project.get('highlights', [])])
+    return f"""
+    <div style="background: var(--color-bg-primary); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow);">
+        <div style="height: 200px; background-color: #ddd; background-image: url('../{project.get('cover_image', '')}'); background-size: cover; background-position: center;"></div>
+        <div style="padding: 1.5rem;">
+            <div style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; color: var(--color-text-secondary); margin-bottom: 5px;">{project.get('typology','')}</div>
+            <h3 style="margin-bottom: 0.5rem;">{project.get('name','Project')}</h3>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">{project.get('location','')} • <span style="color: var(--color-primary); font-weight: 600;">{project.get('status','')}</span></p>
+            <ul style="padding-left: 1.2rem; margin-bottom: 0;">{highlights}</ul>
+        </div>
+    </div>
+    """
+
+def build_site():
+    print(f"[{time.strftime('%H:%M:%S')}] Building sites...")
+    clean_dist()
+    copy_assets()
+    
+    builders = load_data()
+    if not builders:
+        print("No builders found to generate.")
+        return
+
+    # Load Template
+    template_path = SRC_DIR / 'templates/builder.html'
+    if not template_path.exists():
+        print("Error: Template not found.")
+        return
+    template = template_path.read_text(encoding='utf-8')
+
+    for builder in builders:
+        slug = builder.get('slug')
+        if not slug: continue
+        
+        # Create Builder Directory
+        site_dir = DIST_DIR / slug
+        site_dir.mkdir(exist_ok=True)
+        
+        # Prepare Data
+        tenancy = builder.get('tenancy', {})
+        projects_html = "\n".join([generate_project_card(p) for p in builder.get('projects', [])])
+        locations_html = "\n".join([f"<li>{l}</li>" for l in tenancy.get('locations', [])])
+        unit_types_html = ", ".join(tenancy.get('unit_types', []))
+        amenities_html = "\n".join([f'<span style="background:var(--color-bg-secondary); padding:4px 8px; border-radius:4px; font-size:0.9rem;">{a}</span>' for a in tenancy.get('amenities', [])])
+
+        # Replacements
+        replacements = {
+            '{{company_name}}': builder.get('company_name', ''),
+            '{{owner_name}}': builder.get('owner_name', ''),
+            '{{phone}}': builder.get('phone', ''),
+            '{{whatsapp_link}}': builder.get('whatsapp_link', '#'),
+            '{{theme}}': builder.get('theme', 'modern'),
+            '{{hero_bg}}': builder.get('hero_bg', ''),
+            '{{projects_html}}': projects_html,
+            '{{tenancy_headline}}': tenancy.get('headline', ''),
+            '{{locations_list_html}}': locations_html,
+            '{{unit_types_html}}': unit_types_html,
+            '{{amenities_html}}': amenities_html,
+            '{{brochure_pdf}}': tenancy.get('brochure_pdf', '#'),
+            '{{contact_hours}}': tenancy.get('contact_hours', '')
+        }
+        
+        content = template
+        for k, v in replacements.items():
+            content = content.replace(k, str(v))
+            
+        (site_dir / 'index.html').write_text(content, encoding='utf-8')
+        
+    # Generate Directory / Landing Page
+    index_template_path = SRC_DIR / 'templates/directory.html'
+    if index_template_path.exists():
+        idx_tmpl = index_template_path.read_text(encoding='utf-8')
+        
+        # 1. Aggregate Projects
+        all_projects = []
+        for b in builders:
+            for p in b.get('projects', []):
+                # Add builder slug to project for linking
+                p['builder_slug'] = b['slug']
+                all_projects.append(p)
+        
+        # 2. Featured Projects HTML
+        # Feature top 6 projects (mock logic: just take first 6)
+        featured_projects_html = ""
+        for p in all_projects[:6]:
+            img_url = f"{p['builder_slug']}/{p.get('cover_image', '')}"
+            # Ensure relative path correctness if assets are shared or distinct
+            # For now, assuming assets are copied to site folders, but for directory we might need full path or adjusting
+            # Actually, dist structure is:
+            # dist/builder-slug/index.html
+            # dist/index.html
+            # So from dist/index.html, image at "builder-slug/assets/img" is accessible if we moved assets correctly.
+            # But currently `build.py` copies `data/assets` to `dist/assets`.
+            # And `generate_project_card` uses `../` for builder pages.
+            # For the main directory, the path should be `assets/` directly if using the shared assets folder,
+            # OR `builder-slug/` doesn't have its own assets unless we changed that.
+            # Wait, `copy_assets` copies `data/assets` to `dist/assets`.
+            # Builder pages are in `dist/slug/index.html`, so they need `../assets/img.jpg`.
+            # Directory page is in `dist/index.html`, so it needs `assets/img.jpg`.
+            
+            # Correction: User's logic for images in `generate_project_card` was `../{project.get('cover_image')}`.
+            # This implies `cover_image` is like `assets/foo.jpg`.
+            # So for directory, we just remove the `../`.
+            raw_img = p.get('cover_image', '')
+            dir_img_path = raw_img if not raw_img.startswith('../') else raw_img.replace('../', '')
+            
+            featured_projects_html += f"""
+            <div class="card">
+                <div class="card__img">
+                    <img src="{dir_img_path}" alt="{p.get('name')}" loading="lazy">
+                </div>
+                <div class="card__body">
+                    <div style="font-size:0.75rem; color:var(--accent); text-transform:uppercase; margin-bottom:6px;">{p.get('status','')}</div>
+                    <h3 class="card__title">{p.get('name')}</h3>
+                    <div class="card__meta">{p.get('location')}</div>
+                    <div class="card__tags">
+                        <span class="card__tag">{p.get('typology', 'Residence')}</span>
+                        <span class="card__tag">{p.get('builder_slug')}</span>
+                    </div>
+                </div>
+                <a href="{p['builder_slug']}/index.html" style="position:absolute; inset:0;"></a>
+            </div>
+            """
+
+        # 3. Builder List HTML
+        builder_list_html = ""
+        for b in builders:
+            builder_list_html += f"""
+            <div class="builder-row">
+                <div class="builder-info">
+                    <h4>{b.get('company_name')}</h4>
+                    <p>{b.get('owner_name')} • {len(b.get('projects',[]))} Projects</p>
+                </div>
+                <a href="{b['slug']}/index.html" class="btn btn--ghost" style="padding:8px 16px; font-size:0.9rem;">p. Launch Site</a>
+            </div>
+            """
+
+        # 4. Inject
+        idx_content = idx_tmpl.replace('{{featured_projects_html}}', featured_projects_html)
+        idx_content = idx_content.replace('{{builder_list_items}}', builder_list_html)
+        idx_content = idx_content.replace('{{builder_count}}', str(len(builders)))
+        idx_content = idx_content.replace('{{project_count}}', str(len(all_projects)))
+        
+        (DIST_DIR / 'index.html').write_text(idx_content, encoding='utf-8')
+
+    print(f"[{time.strftime('%H:%M:%S')}] Build Complete! Output in /dist")
+
+# --- Server & Watcher Logic ---
+
+def run_server():
+    os.chdir(DIST_DIR)
+    handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", PORT), handler) as httpd:
+        print(f"\n🚀 Serving at http://localhost:{PORT}")
+        print("Press Ctrl+C to stop.")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            pass
+
+def watch_mode():
+    print(f"👀 Watching for changes in {DATA_DIR}...")
+    last_mtime = 0
+    try:
+        while True:
+            # Check modification time of builders.json
+            try:
+                mtime = DATA_FILE.stat().st_mtime
+            except FileNotFoundError:
+                mtime = 0
+            
+            if mtime > last_mtime:
+                last_mtime = mtime
+                if mtime > 0: # Avoid initial double build if possible, but safe to build
+                    print("\nChange detected! Rebuilding...")
+                    build_site()
+            
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Stopping watcher...")
+
+def main():
+    args = sys.argv[1:]
+    
+    # Always build first
+    build_site()
+    
+    if '--serve' in args or '--watch' in args:
+        # If serving, run server in a thread
+        if '--serve' in args:
+            t = threading.Thread(target=run_server, daemon=True)
+            t.start()
+            
+        if '--watch' in args:
+            watch_mode() # Main thread blocks here
+        elif '--serve' in args:
+            # If serve only, keep main thread alive
+            try:
+                while True: time.sleep(1)
+            except KeyboardInterrupt:
+                pass
+
+if __name__ == '__main__':
+    main()

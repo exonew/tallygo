@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{company_name}} | Premium Properties</title>
+    <meta name="description" content="Premium properties by {{company_name}}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body class="theme-{{theme}}">
+    <!-- Header -->
+    <header
+      class="fade-in"
+      style="background-color: var(--color-bg-secondary); padding: 1rem 0"
+    >
+      <div
+        class="container"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <div
+          style="
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--color-primary);
+          "
+        >
+          {{company_name}}
+        </div>
+        <nav>
+          <a href="#projects" style="margin-right: 20px">Projects</a>
+          <a href="#tenancy" class="btn btn-primary">Leasing</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section
+      class="hero fade-in"
+      style="background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('../{{hero_bg}}') center/cover no-repeat; height: 70vh; display: flex; align-items: center; text-align: center; color: white;"
+    >
+      <div class="container">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem">
+          Building Dreams, <br />
+          <span style="color: var(--color-primary)">Delivering Value</span>
+        </h1>
+        <p style="font-size: 1.25rem; opacity: 0.9; margin-bottom: 2rem">
+          {{owner_name}} welcomes you to our premium portfolio.
+        </p>
+        <a href="#contact" class="btn btn-accent">Contact Us</a>
+      </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section id="projects" class="container section-padding fade-in">
+      <h2
+        style="
+          margin-bottom: 2rem;
+          border-left: 5px solid var(--color-primary);
+          padding-left: 15px;
+        "
+      >
+        Featured Projects
+      </h2>
+      <div class="grid grid-2">{{projects_html}}</div>
+    </section>
+
+    <!-- Tenancy Section -->
+    <section
+      id="tenancy"
+      style="background-color: var(--color-bg-secondary)"
+      class="section-padding fade-in"
+    >
+      <div class="container">
+        <div
+          style="text-align: center; max-width: 800px; margin: 0 auto 3rem auto"
+        >
+          <h2 style="color: var(--color-primary)">{{tenancy_headline}}</h2>
+          <p style="margin-top: 1rem">
+            Exclusive commercial and retail opportunities for your business.
+          </p>
+        </div>
+
+        <div class="grid grid-2">
+          <div
+            style="
+              background: var(--color-bg-primary);
+              padding: 2rem;
+              border-radius: var(--border-radius);
+              box-shadow: var(--shadow);
+            "
+          >
+            <h3>Available Locations</h3>
+            <ul style="margin: 1rem 0 2rem 1.2rem">
+              {{locations_list_html}}
+            </ul>
+            <h3>Unit Types</h3>
+            <p>{{unit_types_html}}</p>
+          </div>
+          <div
+            style="
+              background: var(--color-bg-primary);
+              padding: 2rem;
+              border-radius: var(--border-radius);
+              box-shadow: var(--shadow);
+            "
+          >
+            <h3>Amenities</h3>
+            <div
+              style="
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-bottom: 2rem;
+              "
+            >
+              {{amenities_html}}
+            </div>
+
+            <div
+              style="
+                background: var(--color-accent);
+                color: var(--color-text-on-accent);
+                padding: 1.5rem;
+                border-radius: 4px;
+                text-align: center;
+              "
+            >
+              <h4 style="margin-bottom: 0.5rem">Interested in Leasing?</h4>
+              <p style="margin-bottom: 1rem">
+                Download our brochure for floor plans.
+              </p>
+              <a
+                href="../{{brochure_pdf}}"
+                target="_blank"
+                class="btn btn-primary"
+                style="width: 100%"
+                >Download Brochure PDF</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / Footer -->
+    <footer
+      id="contact"
+      style="
+        background-color: var(--color-bg-primary);
+        padding: 3rem 0;
+        border-top: 1px solid var(--color-text-secondary);
+      "
+      class="fade-in"
+    >
+      <div class="container" style="text-align: center">
+        <h2 style="margin-bottom: 1.5rem">Get in Touch</h2>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+          "
+        >
+          <a
+            href="tel:{{phone}}"
+            class="btn"
+            style="border: 2px solid var(--color-text-primary)"
+            >Call {{phone}}</a
+          >
+          <a
+            href="{{whatsapp_link}}"
+            target="_blank"
+            class="btn"
+            style="background-color: #25d366; color: white"
+            >WhatsApp Us</a
+          >
+        </div>
+        <p
+          style="
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+          "
+        >
+          &copy; 2024 {{company_name}}. All rights reserved. <br />
+          Contact Hours: {{contact_hours}}
+        </p>
+      </div>
+    </footer>
+
+    <script src="../app.js"></script>
+  </body>
+</html>
